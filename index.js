@@ -2,6 +2,7 @@ const globby = require('globby');
 const fs = require('fs-extra');
 const ejs = require('ejs');
 const path = require('path');
+const textExtensions = require('text-extensions');
 
 const apply = async (dir, to, options) => {
     dir = path.resolve(dir);
@@ -11,10 +12,14 @@ const apply = async (dir, to, options) => {
         cwd: dir
     });
     for (let filePath of paths) {
-        const file = await fs.readFile(path.resolve(dir,filePath), 'utf8');
         const targetDir = path.resolve(to, filePath);
-        await fs.ensureDir(path.dirname(targetDir));
-        await fs.writeFile(targetDir, ejs.render(file, options));
+        if (textExtensions.indexOf(path.extname(filePath).slice(1)) > -1) {
+            const file = await fs.readFile(path.resolve(dir, filePath), 'utf8');
+            await fs.ensureDir(path.dirname(targetDir));
+            await fs.writeFile(targetDir, ejs.render(file, options));
+        } else {
+            await fs.copy(path.resolve(dir, filePath),targetDir);
+        }
     }
 };
 
