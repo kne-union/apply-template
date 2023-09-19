@@ -1,6 +1,6 @@
 {
   "name": "@kne/apply-template",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "将一个项目模板初始化一个项目到指定目录",
   "main": "index.js",
   "files": [
