@@ -7,7 +7,7 @@ const textExtensions = require('text-extensions');
 const apply = async (dir, to, options) => {
     dir = path.resolve(dir);
     to = path.resolve(to);
-    await fs.emptyDir(to);
+    await fs.ensureDir(to);
     const paths = await globby('**/*', {
         cwd: dir
     });
