@@ -1,4 +1,4 @@
-const globby = require('globby');
+const {glob} = require('glob');
 const fs = require('fs-extra');
 const ejs = require('ejs');
 const path = require('path');
@@ -8,8 +8,8 @@ const apply = async (dir, to, options) => {
     dir = path.resolve(dir);
     to = path.resolve(to);
     await fs.ensureDir(to);
-    const paths = await globby('**/*', {
-        cwd: dir
+    const paths = await glob('**/*', {
+        cwd: dir, dot: true
     });
     for (let filePath of paths) {
         const targetDir = path.resolve(to, filePath);
@@ -18,7 +18,7 @@ const apply = async (dir, to, options) => {
             await fs.ensureDir(path.dirname(targetDir));
             await fs.writeFile(targetDir, ejs.render(file, options));
         } else {
-            await fs.copy(path.resolve(dir, filePath),targetDir);
+            await fs.copy(path.resolve(dir, filePath), targetDir);
         }
     }
 };
